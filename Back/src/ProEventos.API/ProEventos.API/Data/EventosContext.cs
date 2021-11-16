@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ProEventos.API.Data
 {
-    public class EventoContext : DbContext
+    public class EventosContext : DbContext
     {
-        public EventoContext(DbContextOptions<EventoContext> options) : base(options)
+        public EventosContext(DbContextOptions<EventosContext> options) : base(options)
         {
         }
 

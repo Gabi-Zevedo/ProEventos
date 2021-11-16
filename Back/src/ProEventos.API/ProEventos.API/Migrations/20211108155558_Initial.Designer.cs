@@ -7,7 +7,7 @@ using ProEventos.API.Data;
 
 namespace ProEventos.API.Migrations
 {
-    [DbContext(typeof(EventoContext))]
+    [DbContext(typeof(EventosContext))]
     [Migration("20211108155558_Initial")]
     partial class Initial
     {
