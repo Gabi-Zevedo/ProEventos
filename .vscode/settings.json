@@ -1,2 +1,6 @@
 {
+    "angular.view-engine": true,
+    "angular.enable-strict-mode-prompt": true,
+    "angular.suggest.includeAutomaticOptionalChainCompletions": true,
+    "angular.suggest.includeCompletionsWithSnippetText": true
 }
