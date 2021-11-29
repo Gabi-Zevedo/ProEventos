@@ -16,6 +16,8 @@ export class EventosComponent implements OnInit {
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
   public mostrarImagem: boolean = true;
+  public larguraImagem: number = 50;
+  public margemImagem: number = 2;
   private _filtroLista: string = '';
 
   public get filtroLista() {
