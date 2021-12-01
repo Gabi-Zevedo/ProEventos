@@ -12,7 +12,7 @@ import { PalestrantesComponent } from './components/palestrantes/palestrantes.co
 import { NavComponent } from './shared/nav/nav.component';
 import { ContatosComponent } from './components/contatos/contatos.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { PerfilComponent } from './components/perfil/perfil.component';
+import { PerfilComponent } from './components/user/perfil/perfil.component';
 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -26,6 +26,11 @@ import { DateTimeFormatPipe } from './helpers/DateTimeFormat.pipe';
 
 import { EventoService } from './services/evento.service';
 import { TituloComponent } from './shared/titulo/titulo.component';
+import { EventoDetalheComponent } from './components/eventos/evento-detalhe/evento-detalhe.component';
+import { EventoListaComponent } from './components/eventos/evento-lista/evento-lista.component';
+import { UserComponent } from './components/user/user.component';
+import { LoginComponent } from './components/user/login/login.component';
+import { RegistrationComponent } from './components/user/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +43,11 @@ import { TituloComponent } from './shared/titulo/titulo.component';
     DashboardComponent,
     PerfilComponent,
     TituloComponent,
+    EventoDetalheComponent,
+    EventoListaComponent,
+    UserComponent,
+    LoginComponent,
+    RegistrationComponent,
   ],
   imports: [
     CommonModule,
