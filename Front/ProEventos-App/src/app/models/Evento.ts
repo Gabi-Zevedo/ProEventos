@@ -13,6 +13,6 @@ export interface Evento {
    telefone: string;
    email: string;
    lotes: Lote[];
-   redesSociais: RedeSocial[];
    palestrantesEventos: Palestrante[];
+   redesSociais: RedeSocial[];
 }

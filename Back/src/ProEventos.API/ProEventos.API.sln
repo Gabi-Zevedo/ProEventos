@@ -8,15 +8,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProEventos.API", "ProEvento
 		{69518502-E9C5-4891-B6E4-33CD84FE05A9} = {69518502-E9C5-4891-B6E4-33CD84FE05A9}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Proeventos.Application", "Proeventos.Application\Proeventos.Application.csproj", "{69518502-E9C5-4891-B6E4-33CD84FE05A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProEventos.Application", "Proeventos.Application\ProEventos.Application.csproj", "{69518502-E9C5-4891-B6E4-33CD84FE05A9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C0983B4B-14E7-41D5-9EB1-A4BF39CA7BF7} = {C0983B4B-14E7-41D5-9EB1-A4BF39CA7BF7}
 		{858769C2-2C5E-4627-A564-4EEE36E0B4C0} = {858769C2-2C5E-4627-A564-4EEE36E0B4C0}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProEventos.Domain", "ProEventos.Domain\ProEventos.Domain.csproj", "{858769C2-2C5E-4627-A564-4EEE36E0B4C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProEventos.Domain", "ProEventos.Domain\ProEventos.Domain.csproj", "{858769C2-2C5E-4627-A564-4EEE36E0B4C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProEventos.Persistence", "ProEventos.Persistence\ProEventos.Persistence.csproj", "{C0983B4B-14E7-41D5-9EB1-A4BF39CA7BF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProEventos.Persistence", "ProEventos.Persistence\ProEventos.Persistence.csproj", "{C0983B4B-14E7-41D5-9EB1-A4BF39CA7BF7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{858769C2-2C5E-4627-A564-4EEE36E0B4C0} = {858769C2-2C5E-4627-A564-4EEE36E0B4C0}
 	EndProjectSection
