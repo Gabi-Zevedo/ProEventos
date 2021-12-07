@@ -9,16 +9,17 @@ import { EventoService } from 'src/app/services/evento.service';
 @Component({
   selector: 'app-evento-lista',
   templateUrl: './evento-lista.component.html',
-  styleUrls: ['./evento-lista.component.scss']
+  styleUrls: ['./evento-lista.component.scss'],
 })
 export class EventoListaComponent implements OnInit {
-
   modalRef?: BsModalRef;
   public eventos: Evento[] = [];
   public eventosFiltrados: Evento[] = [];
   public mostrarImagem: boolean = true;
   public larguraImagem: number = 100;
   public margemImagem: number = 2;
+  public eventoId!: number;
+  public eventoTema!: string;
   private _filtroLista: string = '';
 
   public get filtroLista() {
@@ -56,8 +57,6 @@ export class EventoListaComponent implements OnInit {
     this.spinner.show();
     this.getEventos();
     //spinner no começo
-
-
   }
 
   public alterarImagem(): void {
@@ -65,33 +64,55 @@ export class EventoListaComponent implements OnInit {
   }
 
   public getEventos(): void {
-    this.eventoService.getEventos().subscribe({
-      next: (_eventos: Evento[]) => {
+    this.eventoService.getEventos().subscribe(
+      (_eventos: Evento[]) => {
         this.eventos = _eventos;
         this.eventosFiltrados = this.eventos;
       },
-      error: (error: any) => {
-        this.spinner.hide();
-        this.toastr.error('Erro ao carregar eventos', 'ERROR')
+      (error: any) => {
+        this.toastr.error('Erro ao carregar eventos', 'ERROR');
       },
-      complete: () => this.spinner.hide()
-    });
+
+    ).add(() => this.spinner.hide());
   }
 
-  openModal(template: TemplateRef<any>) {
+  openModal(
+    event: any,
+    template: TemplateRef<any>,
+    eventoId: number,
+    eventoTema: string
+  ) {
+    event.stopPropagation();
+    this.eventoId = eventoId;
+    this.eventoTema = eventoTema;
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
-  confirm(): void {
+  confirm(eventoTema: string): void {
     this.modalRef?.hide();
-    this.toastr.success('Evento Deletado Com sucesso', 'Deletado!');
+    this.spinner.show;
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (result: any) => {
+        if (result.message === 'Deletado') {
+          this.toastr.success(
+            `${eventoTema} Deletado Com sucesso`,
+            'Deletado!'
+          );
+          this.getEventos();
+        }
+      },
+      (error: any) => {
+        this.toastr.error(`Erro ao deletar evento ${this.eventoId} - "${this.eventoTema}"`, 'Erro!');
+        console.error(error);
+      },
+    ).add(() => this.spinner.hide());
   }
 
   decline(): void {
     this.modalRef?.hide();
   }
 
-  detalheEvento(id: number): void{
+  detalheEvento(id: number): void {
     this.router.navigate([`eventos/detalhe/${id}`]);
   }
 }
