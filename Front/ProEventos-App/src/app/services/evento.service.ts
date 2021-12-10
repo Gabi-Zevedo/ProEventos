@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { take } from "rxjs/operators";
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable(
+  //providedIn: 'root',
+)
 export class EventoService {
   baseURL = 'https://localhost:44311/api/Eventos';
   constructor(private http: HttpClient) {}
