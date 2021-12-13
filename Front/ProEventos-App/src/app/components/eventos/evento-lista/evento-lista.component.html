@@ -53,7 +53,7 @@
           <img
             [collapse]="!mostrarImagem"
             [isAnimated]="true"
-            src="/assets/{{ evento.imageURL }}"
+            [src]="imagem(evento.imageURL)"
             alt=""
             [style.width.px]="larguraImagem"
             [style.margin.px]="margemImagem"

@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Lote } from './../../../models/Lote';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +9,6 @@ import { LoteService } from 'src/app/services/lote.service';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import {
   AbstractControl,
-  Form,
   FormArray,
   FormBuilder,
   FormControl,
@@ -30,6 +30,8 @@ export class EventoDetalheComponent implements OnInit {
   eventoId!: number;
   modalRef: BsModalRef;
   loteAtual = {id: 0, nome: '', indice: 0};
+  imagemURL = 'assets/upload.png';
+  file: File;
 
   get modoEditar(): boolean {
     return this.estadoSalvar === 'put';
@@ -71,6 +73,9 @@ export class EventoDetalheComponent implements OnInit {
           (evento: Evento) => {
             this.evento = { ...evento };
             this.form.patchValue(this.evento);
+            if (this.evento.imageURL !== '') {
+              this.imagemURL = environment.apiURL + 'resources/images/' + this.evento.imageURL;
+            }
             //this.carregarLotes();
             this.evento.lotes.forEach((lote) => {this.lotes.push(this.criarLote(lote));
             });
@@ -124,7 +129,7 @@ export class EventoDetalheComponent implements OnInit {
       qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      imageURL: ['', Validators.required],
+      imageURL: [''],
       lotes: this.fb.array([]),
     });
   }
@@ -187,6 +192,7 @@ export class EventoDetalheComponent implements OnInit {
             'Great Sucess'
           );
           this.router.navigate([`eventos/detalhe/${eventoRetorno.id}`]);
+          this.estadoSalvar = 'put';
         },
         (error: any) => {
           console.error(Error);
@@ -251,6 +257,39 @@ this.loteService.deleteLote(this.eventoId, this.loteAtual.id).subscribe(() => {
 
   declineDeleteLote(): void{
     this.modalRef.hide();
+  }
+
+
+  onFileChange(event: any): void{
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => this.imagemURL = event.target.result;
+
+    this.file = event.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImagem();
+  }
+
+  uploadImagem(): void{
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
+
+      () => {
+        this.carregarEvento();
+        this.toastr.success( 'Imagem Atualizada com Sucesso', 'Great Sucess');
+      },
+
+      (error: any) => {
+        this.toastr.error(`Erro ao Atualizar Imagem`, 'Erro!');
+        console.error(Error);
+      }
+
+
+      ).add(() => this.spinner.hide())
+
+
+
   }
 
 }

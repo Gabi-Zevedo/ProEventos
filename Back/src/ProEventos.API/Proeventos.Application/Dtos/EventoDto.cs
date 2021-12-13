@@ -16,8 +16,7 @@ namespace ProEventos.Application.Dtos
         [Required,
          Range(1, 120000)]
         public int QtdPessoas { get; set; }
-        [Required,
-            RegularExpression(@".*\.(gif|jpe?g|bmp|png)$")]
+       [RegularExpression(@".*\.(gif|jpe?g|bmp|png)$")]
         public string ImageURL { get; set; }
         [Required,Phone]
         public string Telefone { get; set; }
