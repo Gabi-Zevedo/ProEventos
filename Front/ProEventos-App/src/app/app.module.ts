@@ -1,10 +1,11 @@
+import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { LoteService } from './services/lote.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,7 +20,7 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
-import { NgxCurrencyModule } from "ngx-currency";
+import { NgxCurrencyModule } from 'ngx-currency';
 
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -33,10 +34,13 @@ import { EventoListaComponent } from './components/eventos/evento-lista/evento-l
 import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
+import { AccountService } from './services/account.service';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
     EventosComponent,
     PalestrantesComponent,
     NavComponent,
@@ -72,8 +76,12 @@ import { RegistrationComponent } from './components/user/registration/registrati
     NgxSpinnerModule,
     NgxCurrencyModule,
   ],
-  providers: [EventoService, LoteService],
-  bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [
+    EventoService,
+    LoteService,
+    AccountService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

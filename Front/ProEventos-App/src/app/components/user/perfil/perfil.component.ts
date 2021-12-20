@@ -1,3 +1,8 @@
+import { UserUpdate } from './../../../models/identity/UserUpdate';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { AccountService } from './../../../services/account.service';
 import {
   FormGroup,
   FormBuilder,
@@ -14,26 +19,56 @@ import { ValidatorField } from '@app/helpers/ValidatorField';
 })
 export class PerfilComponent implements OnInit {
   form!: FormGroup;
+  userUpdate = {} as UserUpdate;
 
   public get f(): any {
     return this.form.controls;
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    public accountService: AccountService,
+    private router: Router,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit(): void {
     this.validation();
+    this.carregarUsuario();
   }
+
+  private carregarUsuario(): void {
+    this.spinner.show();
+    this.accountService
+      .getUser()
+      .subscribe(
+        (userRetorno: UserUpdate) => {
+          console.log(userRetorno);
+          this.userUpdate = userRetorno;
+          this.form.patchValue(this.userUpdate);
+          this.toastr.success('Usuário carregado', 'Great Sucess');
+        },
+        (error: Error) => {
+          console.error(error);
+          this.toastr.error('Erro ao carregar usuário', 'Erro!');
+          this.router.navigate(['/dashboard']);
+        }
+      )
+      .add(() => this.spinner.hide());
+  }
+
   /**
    * validation
  : void  */
   public validation(): void {
     const formOptions: AbstractControlOptions = {
-      validators: ValidatorField.MustMatch('senha', 'confirmarSenha'),
+      validators: ValidatorField.MustMatch('password', 'confirmarPassword'),
     };
     this.form = this.fb.group(
       {
-        titulo: ['', Validators.required],
+        username: [''],
+        titulo: ['NaoInformado', Validators.required],
         primeiroNome: [
           '',
           [
@@ -51,8 +86,8 @@ export class PerfilComponent implements OnInit {
           ],
         ],
         email: ['', [Validators.required, Validators.email]],
-        telefone: ['', Validators.required],
-        funcao: ['', Validators.required],
+        phoneNumber: ['', Validators.required],
+        funcao: ['NaoInformado', Validators.required],
         descricao: [
           '',
           [
@@ -61,8 +96,8 @@ export class PerfilComponent implements OnInit {
             Validators.maxLength(250),
           ],
         ],
-        senha: ['', [Validators.required, Validators.minLength(8)]],
-        confirmarSenha: ['', [Validators.required]],
+        password: ['', [Validators.nullValidator, Validators.minLength(8)]],
+        confirmarPassword: ['', [Validators.nullValidator]],
       },
       formOptions
     );
@@ -74,8 +109,22 @@ export class PerfilComponent implements OnInit {
   }
 
   onSubimit(): void {
-    if (this.form.invalid) {
-      return;
-    }
+    this.atualizarUsuario();
+  }
+
+  atualizarUsuario(){
+    this.userUpdate = { ...this.form.value}
+    this.spinner.show();
+
+    this.accountService.updateUser(this.userUpdate).subscribe(
+      () => {
+        this.toastr.success('Usuário Atualizado', 'Great Sucess')
+       },
+      (error: Error) => {
+        console.error(error);
+        this.toastr.error('Erro ao atualizar usuário', 'Erro!');
+      }
+    )
+    .add(() => this.spinner.hide());
   }
 }

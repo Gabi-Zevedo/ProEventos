@@ -12,7 +12,7 @@
   </div>
 
   <div class="col-md-6">
-    <form class="p-1" [formGroup]="form">
+    <form class="p-1" [formGroup]="form" (ngSubmit)="register()">
       <div class="pb-2 d-block d-md-none">
         <h3 class="border-bottom">Cadastro de Usuário</h3>
       </div>
@@ -88,18 +88,18 @@
         <input
           type="text"
           class="form-control is-invalid"
-          [ngClass]="{ 'is-invalid': f.usuario.errors && f.usuario.touched }"
-          formControlName="usuario"
+          [ngClass]="{ 'is-invalid': f.username.errors && f.username.touched }"
+          formControlName="username"
           placeholder="Insira o nome de Usuário"
         />
-        <div *ngIf="f.usuario.errors?.required" class="invalid-feedback">
+        <div *ngIf="f.username.errors?.required" class="invalid-feedback">
           *Obrigatório
         </div>
       </div>
-      <div *ngIf="f.usuario.errors?.minlength" class="invalid-feedback">
+      <div *ngIf="f.username.errors?.minlength" class="invalid-feedback">
         *Usuário deve ter mais de 3 caracteres
       </div>
-      <div *ngIf="f.usuario.errors?.maxlength" class="invalid-feedback">
+      <div *ngIf="f.username.errors?.maxlength" class="invalid-feedback">
         *Usuário deve ter menos de 20 caracteres
       </div>
 
@@ -109,15 +109,15 @@
           <input
             type="password"
             class="form-control is-invalid"
-            [ngClass]="{ 'is-invalid': f.senha.errors && f.senha.touched }"
-            formControlName="senha"
-            placeholder="Digite uma Senha"
+            [ngClass]="{ 'is-invalid': f.password.errors && f.password.touched }"
+            formControlName="password"
+            placeholder="Digite uma senha"
           />
-          <div *ngIf="f.senha.errors?.required" class="invalid-feedback">
+          <div *ngIf="f.password.errors?.required" class="invalid-feedback">
             *Obrigatório
           </div>
 
-          <div *ngIf="f.senha.errors?.minlength" class="invalid-feedback">
+          <div *ngIf="f.password.errors?.minlength" class="invalid-feedback">
             *Senha deve ter mais de 8 caracteres
           </div>
         </div>
@@ -126,14 +126,14 @@
           <input
             class="form-control is-invalid"
             type="password"
-            [ngClass]="{ 'is-invalid': f.confirmarSenha.errors && f.confirmarSenha.touched }"
-            formControlName="confirmarSenha"
+            [ngClass]="{ 'is-invalid': f.confirmarPassword.errors && f.confirmarPassword.touched }"
+            formControlName="confirmarPassword"
             placeholder="Confirme a Senha"
           />
-          <div *ngIf="f.confirmarSenha.errors?.required" class="invalid-feedback">
+          <div *ngIf="f.confirmarPassword.errors?.required" class="invalid-feedback">
             *Obrigatório
           </div>
-          <div *ngIf="f.confirmarSenha.errors?.mustMatch" class="invalid-feedback">
+          <div *ngIf="f.confirmarPassword.errors?.mustMatch" class="invalid-feedback">
             *As senhas precisam ser iguais
           </div>
         </div>
@@ -152,7 +152,7 @@
       </div>
       <div class="form-row">
         <div class="form-group col-12">
-          <button class="btn btn-lg btn-success btn-block px-5 " [disabled]="!form?.valid">
+          <button class="btn btn-lg btn-success btn-block px-5 " [disabled]="!form?.valid" type="submit">
             Registar
           </button>
         </div>

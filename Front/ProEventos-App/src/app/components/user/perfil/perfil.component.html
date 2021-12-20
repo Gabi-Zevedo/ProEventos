@@ -1,6 +1,6 @@
 <app-titulo [titulo]="'Perfil'"></app-titulo>
 <div class="card rounded shadow-sm bg-secondary bg-opacity-25">
-  <form [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="onSubimit()">
     <div class="row p-3">
       <div class="col-lg-3 pt-1">
         <div class="card mb-3">
@@ -17,23 +17,22 @@
             </a>
           </div>
           <div class="card-body">
-            <div class="h4 text-center mb-3">@Zevedo</div>
-            <div class="h7 text-bold pb-1"><b>Nome: </b>Gabriel Azevedo</div>
+            <div class="h4 text-center mb-3">@{{f.username.value}}</div>
+            <div class="h7 text-bold pb-1"><b>Nome: </b>{{f.primeiroNome.value + ' ' + f.ultimoNome.value}} </div>
             <div class="h7">
-              Developer of web applications, JavaScript, PHP, Java, Python,
-              Ruby, Java, Node.js, etc.
+              {{f.descricao.value}}
             </div>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <div class="row">
                 <div class="col-6 text-center border-right">
-                  <div class="h5">1342</div>
-                  <div class="h6 text-muted">Eventos Ministrados</div>
+                  <div class="h5">0</div>
+                  <div class="h6 text-muted">Meus Eventos</div>
                 </div>
                 <div class="col-6 text-center">
-                  <div class="h5">1342</div>
-                  <div class="h6 text-muted">Eventos Participados</div>
+                  <div class="h5">0</div>
+                  <div class="h6 text-muted">Participações</div>
                 </div>
               </div>
             </li>
@@ -57,14 +56,14 @@
               placeholder=""
             >
               <option value=""></option>
-              <option value="0">Não Quero</option>
-              <option value="Senhorita">Tecnólogo(a)</option>
-              <option value="Senhorita">Bacharel</option>
-              <option value="Senhorita">Especialista</option>
-              <option value="Senhorita">Pós Graduado(a)</option>
-              <option value="Senhorita">Mestre</option>
-              <option value="Senhorita">Doutor(a)</option>
-              <option value="Senhorita">Pós Doc</option>
+              <option value="NaoInformado">Não Quero</option>
+              <option value="Tecnologo">Tecnólogo(a)</option>
+              <option value="Bacharel">Bacharel</option>
+              <option value="Especialista">Especialista</option>
+              <option value="PosGraduado">Pós Graduado(a)</option>
+              <option value="Mestrado">Mestre</option>
+              <option value="Doutorado">Doutor(a)</option>
+              <option value="PosDoutorado">Pós Doc</option>
             </select>
             <div *ngIf="f.titulo.errors?.required" class="invalid-feedback">
               *Obrigatório
@@ -144,15 +143,15 @@
           <div class="form-group col-sm-4">
             <label>Telefone</label>
             <input
-              type="text"
+              type="tel"
               class="form-control is-invalid"
               [ngClass]="{
-                'is-invalid': f.telefone.errors && f.telefone.touched
+                'is-invalid': f.phoneNumber.errors && f.phoneNumber.touched
               }"
-              formControlName="telefone"
+              formControlName="phoneNumber"
               placeholder=""
             />
-            <div *ngIf="f.telefone.errors?.required" class="invalid-feedback">
+            <div *ngIf="f.phoneNumber.errors?.required" class="invalid-feedback">
               *Obrigatório
             </div>
           </div>
@@ -167,6 +166,7 @@
               placeholder=""
             >
               <option value=""></option>
+              <option value="NaoInformado">Nâo Informado</option>
               <option value="Participante">Participante</option>
               <option value="Palestrante">Palestrante</option>
             </select>
@@ -174,7 +174,7 @@
               *Obrigatório
             </div>
           </div>
-          <form-group class="col-12">
+          <div class="form-group col-12">
             <label>Descrição</label>
             <input
               type="text"
@@ -194,7 +194,7 @@
             <div *ngIf="f.descricao.errors?.maxlength" class="invalid-feedback">
               *Descrição deve ter menos de 250 caracteres
             </div>
-          </form-group>
+          </div>
         </div>
         <div>
           <h3 class="pt-3 border-bottom">Mudar Senha</h3>
@@ -207,15 +207,15 @@
               type="password"
               class="form-control is-invalid"
               [ngClass]="{
-                'is-invalid': f.senha.errors && f.senha.touched
+                'is-invalid': f.password.errors && f.password.touched
               }"
-              formControlName="senha"
+              formControlName="password"
               placeholder=""
             />
-            <div *ngIf="f.senha.errors?.required" class="invalid-feedback">
+            <div *ngIf="f.password.errors?.required" class="invalid-feedback">
               *Obrigatório
             </div>
-            <div *ngIf="f.senha.errors?.minlength" class="invalid-feedback">
+            <div *ngIf="f.password.errors?.minlength" class="invalid-feedback">
               *Senha deve ter mais de 8 caracteres
             </div>
           </div>
@@ -226,18 +226,18 @@
               class="form-control is-invalid"
               [ngClass]="{
                 'is-invalid':
-                  f.confirmarSenha.errors && f.confirmarSenha.touched
+                  f.confirmarPassword.errors && f.confirmarPassword.touched
               }"
-              formControlName="confirmarSenha"
+              formControlName="confirmarPassword"
               placeholder=""
             />
             <div
-              *ngIf="f.confirmarSenha.errors?.required"
+              *ngIf="f.confirmarPassword.errors?.required"
               class="invalid-feedback"
             >
               *Obrigatório
             </div>
-            <div *ngIf="f.confirmarSenha.errors?.mustMatch" class="invalid-feedback">
+            <div *ngIf="f.confirmarPassword.errors?.mustMatch" class="invalid-feedback">
               *As senhas precisam ser iguais
             </div>
           </div>
@@ -249,7 +249,7 @@
         <button class="btn btn-outline-primary mr-auto border" (click)="resetForm($event)">
           Cancelar Alteração
         </button>
-        <button class="btn btn-success" [disabled]="!form?.valid">
+        <button class="btn btn-success" type="submmit">
           <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
           Salvar Alteração
         </button>
