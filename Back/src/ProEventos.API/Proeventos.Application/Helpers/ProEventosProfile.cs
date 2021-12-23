@@ -2,6 +2,7 @@
 using ProEventos.Application.Dtos;
 using ProEventos.Domain;
 using ProEventos.Domain.Identity;
+using ProEventos.Persistence.Models;
 
 namespace ProEventos.Application.Helpers
 {
@@ -13,6 +14,8 @@ namespace ProEventos.Application.Helpers
             CreateMap<Lote, LoteDto>().ReverseMap();
             CreateMap<Palestrante, PalestranteDto>().ReverseMap();
             CreateMap<RedeSocial, RedeSocialDto>().ReverseMap();
+
+
 
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserLoginDto>().ReverseMap();

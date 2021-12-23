@@ -1,3 +1,4 @@
+import { PaginatedResult, Pagination } from '@app/models/Pagination';
 import { environment } from './../../../../environments/environment';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
@@ -6,6 +7,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Evento } from 'src/app/models/Evento';
 import { EventoService } from 'src/app/services/evento.service';
+import { Subject } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-evento-lista',
@@ -15,32 +18,38 @@ import { EventoService } from 'src/app/services/evento.service';
 export class EventoListaComponent implements OnInit {
   modalRef?: BsModalRef;
   public eventos: Evento[] = [];
-  public eventosFiltrados: Evento[] = [];
   public mostrarImagem: boolean = true;
   public larguraImagem: number = 100;
   public margemImagem: number = 2;
   public eventoId!: number;
   public eventoTema!: string;
-  private _filtroLista: string = '';
+  public pagination = {} as Pagination;
 
-  public get filtroLista() {
-    return this._filtroLista;
-  }
+  termoBuscaChanged: Subject<string> = new Subject<string>();
 
-  public set filtroLista(value: string) {
-    this._filtroLista = value;
-    this.eventosFiltrados = this.filtroLista
-      ? this.filtrarEventos(this.filtroLista)
-      : this.eventos;
-  }
-
-  public filtrarEventos(filtrarPor: string): Evento[] {
-    filtrarPor = filtrarPor.toLocaleLowerCase();
-    return this.eventos.filter(
-      (evento: any) =>
-        evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1 ||
-        evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
-    );
+  public filtrarEventos(evt: any): void {
+    if (this.termoBuscaChanged.observers.length === 0) {
+      this.termoBuscaChanged.pipe(debounceTime(1000)).subscribe((filterBy) => {
+      this.spinner.show();
+        this.eventoService
+          .getEventos(
+            this.pagination.currentPage,
+            this.pagination.itemsPerPage,
+            filterBy,
+          )
+          .subscribe(
+            (paginatedResult: PaginatedResult<Evento[]>) => {
+              this.eventos = paginatedResult.result;
+              this.pagination = paginatedResult.pagination;
+            },
+            (error: any) => {
+              this.toastr.error('Erro ao carregar eventos', 'ERROR');
+            }
+          )
+          .add(() => this.spinner.hide());
+      });
+    }
+    this.termoBuscaChanged.next(evt.value);
   }
 
   /**
@@ -55,8 +64,13 @@ export class EventoListaComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.spinner.show();
-    this.getEventos();
+    this.pagination = {
+      currentPage: 1,
+      itemsPerPage: 3,
+      totalItems: 1,
+    } as Pagination;
+
+    this.carregarEventos();
     //spinner no começo
   }
 
@@ -64,23 +78,27 @@ export class EventoListaComponent implements OnInit {
     this.mostrarImagem = !this.mostrarImagem;
   }
 
-  public imagem(imagemURL: String): string{
-    return(imagemURL !=='')
-    ? `${environment.apiURL}resources/images/${imagemURL}`
-    : 'assets/semImagem.png';
+  public imagem(imagemURL: String): string {
+    return imagemURL !== ''
+      ? `${environment.apiURL}resources/images/${imagemURL}`
+      : 'assets/semImagem.png';
   }
 
-  public getEventos(): void {
-    this.eventoService.getEventos().subscribe(
-      (_eventos: Evento[]) => {
-        this.eventos = _eventos;
-        this.eventosFiltrados = this.eventos;
-      },
-      (error: any) => {
-        this.toastr.error('Erro ao carregar eventos', 'ERROR');
-      },
+  public carregarEventos(): void {
+    this.spinner.show();
 
-    ).add(() => this.spinner.hide());
+    this.eventoService
+      .getEventos(this.pagination.currentPage, this.pagination.itemsPerPage)
+      .subscribe(
+        (paginatedEventos: PaginatedResult<Evento[]>) => {
+          this.eventos = paginatedEventos.result;
+          this.pagination = paginatedEventos.pagination;
+        },
+        (error: any) => {
+          this.toastr.error('Erro ao carregar eventos', 'ERROR');
+        }
+      )
+      .add(() => this.spinner.hide());
   }
 
   openModal(
@@ -95,24 +113,38 @@ export class EventoListaComponent implements OnInit {
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
+  /**
+   * pageChanged
+   */
+  public pageChanged(event): void {
+    this.pagination.currentPage = event.page;
+    this.carregarEventos();
+  }
+
   confirm(eventoTema: string): void {
     this.modalRef?.hide();
     this.spinner.show;
-    this.eventoService.deleteEvento(this.eventoId).subscribe(
-      (result: any) => {
-        if (result.message === 'Deletado') {
-          this.toastr.success(
-            `${eventoTema} Deletado Com sucesso`,
-            'Deletado!'
+    this.eventoService
+      .deleteEvento(this.eventoId)
+      .subscribe(
+        (result: any) => {
+          if (result.message === 'Deletado') {
+            this.toastr.success(
+              `${eventoTema} Deletado Com sucesso`,
+              'Deletado!'
+            );
+            this.carregarEventos();
+          }
+        },
+        (error: any) => {
+          this.toastr.error(
+            `Erro ao deletar evento ${this.eventoId} - "${this.eventoTema}"`,
+            'Erro!'
           );
-          this.getEventos();
+          console.error(error);
         }
-      },
-      (error: any) => {
-        this.toastr.error(`Erro ao deletar evento ${this.eventoId} - "${this.eventoTema}"`, 'Erro!');
-        console.error(error);
-      },
-    ).add(() => this.spinner.hide());
+      )
+      .add(() => this.spinner.hide());
   }
 
   decline(): void {
