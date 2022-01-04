@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Evento } from 'src/app/models/Evento';
 import { EventoService } from 'src/app/services/evento.service';
 import { Subject } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'app-evento-lista',
@@ -47,14 +47,13 @@ export class EventoListaComponent implements OnInit {
             }
           )
           .add(() => this.spinner.hide());
+
       });
     }
     this.termoBuscaChanged.next(evt.value);
   }
 
-  /**
-   *
-   */
+
   constructor(
     private eventoService: EventoService,
     private modalService: BsModalService,

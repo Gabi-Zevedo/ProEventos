@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Extensions;
+using ProEventos.API.Helpers;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 using System;
@@ -19,12 +20,16 @@ namespace ProEventos.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ITokenService _tokenService;
+        private readonly IUtil _util;
+
+        private readonly string _destino = "Perfil";
 
         public AccountController(IAccountService accountService,
-            ITokenService tokenService)
+            ITokenService tokenService, IUtil util)
         {
             _accountService = accountService;
             _tokenService = tokenService;
+            _util = util;
         }
 
         [HttpGet("GetUser")]
@@ -129,5 +134,32 @@ namespace ProEventos.API.Controllers
                        $"Erro ao atualizar conta. Erro: {e.Message}");
             }
         }
+        [HttpPost("upload-image")]
+
+        public async Task<IActionResult> UploadImage()
+        {
+            try
+            {
+                var user = await _accountService.GetUserByUsernameAsync(User.GetUsername());
+                if (user == null) return NoContent();
+
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    _util.DeleteImage(user.ImageURL, _destino);
+                    user.ImageURL = await _util.SaveImage(file, _destino);
+                }
+                var userRetorno = await _accountService.UpdateAccount(user);
+
+                return Ok(userRetorno);
+            }
+            catch (Exception e)
+            {
+
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao adicionar foto de Perfil. Erro: {e.Message}");
+            }
+        }
+
     }
 }
