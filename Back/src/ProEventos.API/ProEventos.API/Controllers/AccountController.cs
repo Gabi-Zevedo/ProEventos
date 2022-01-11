@@ -142,7 +142,6 @@ namespace ProEventos.API.Controllers
             {
                 var user = await _accountService.GetUserByUsernameAsync(User.GetUsername());
                 if (user == null) return NoContent();
-
                 var file = Request.Form.Files[0];
                 if (file.Length > 0)
                 {

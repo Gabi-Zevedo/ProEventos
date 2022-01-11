@@ -247,7 +247,7 @@ this.loteService.deleteLote(this.eventoId, this.loteAtual.id).subscribe(() => {
 },
 (error: any) => {
   this.toastr.error(`Erro ao Deletar Lote - ${this.loteAtual.id}`, 'Erro!');
-  console.error(Error);
+  console.error(error);
 }
 
 

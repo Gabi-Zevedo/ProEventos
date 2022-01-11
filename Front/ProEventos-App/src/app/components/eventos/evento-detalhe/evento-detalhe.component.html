@@ -34,7 +34,6 @@
                 [ngClass]="cssValidator(f.local)"
                 formControlName="local"
                 placeholder=""
-
                 [(ngModel)]="evento.local"
               />
               <div *ngIf="f.local.errors?.required" class="invalid-feedback">
@@ -49,7 +48,6 @@
                 [ngClass]="cssValidator(f.dataEvento)"
                 formControlName="dataEvento"
                 placeholder=""
-
                 [(ngModel)]="evento.dataEvento"
               />
               <div
@@ -69,7 +67,6 @@
                 [ngClass]="cssValidator(f.qtdPessoas)"
                 formControlName="qtdPessoas"
                 placeholder=""
-
                 [(ngModel)]="evento.qtdPessoas"
               />
               <div
@@ -90,7 +87,6 @@
                 [ngClass]="cssValidator(f.telefone)"
                 formControlName="telefone"
                 placeholder="(000) 90000-0000"
-
                 [(ngModel)]="evento.telefone"
               />
               <div *ngIf="f.telefone.errors?.required" class="invalid-feedback">
@@ -105,7 +101,6 @@
                 [ngClass]="cssValidator(f.email)"
                 formControlName="email"
                 placeholder="e-mail"
-
                 [(ngModel)]="evento.email"
               />
               <div *ngIf="f.email.errors?.required" class="invalid-feedback">
@@ -120,7 +115,7 @@
         <div class="card-footer">
           <div class="d-flex">
             <button
-              class="btn btn-outline-primary mr-auto border"
+              class="btn btn-outline-primary mr-auto border-primary"
               (click)="resetForm($event)"
             >
               Cancelar Alteração
@@ -142,7 +137,7 @@
       *ngIf="modoEditar"
     >
       <div class="p-3">
-        <div class="d-flex border-bottom">
+        <div class="d-flex border-bottom border-primary">
           <h2 class="mr-auto">Lotes do Evento</h2>
           <h2>
             <i class="fas fa-money-bill-wave"></i>
@@ -244,7 +239,7 @@
       <div class="card-footer">
         <div class="d-flex">
           <button
-            class="btn btn-outline-primary mr-auto border"
+            class="btn btn-outline-primary mr-auto border-primary"
             (click)="resetForm($event)"
           >
             Cancelar Alteração
@@ -259,8 +254,21 @@
         </div>
       </div>
     </div>
+    <!--Redes Sociais-->
+    <div
+      class="card rounded shadow-sm mt-3 bg-opacity-25 bg-secondary"
+      *ngIf="modoEditar"
+    >
+      <div class="p-3">
+        <div class="d-flex border-bottom border-primary">
+          <h2 class="mr-auto">Redes Sociais do Evento</h2>
+          <h2><i class="fa fa-user-friends mr-2"></i>
+          </h2>
+        </div>
+        <app-redes-sociais [eventoId]="eventoId" ></app-redes-sociais>
+      </div>
+    </div>
   </div>
-
   <!-- card imagem -->
 
   <div class="col-md-4" *ngIf="modoEditar">

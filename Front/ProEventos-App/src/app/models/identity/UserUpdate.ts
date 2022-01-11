@@ -9,4 +9,5 @@ funcao: string;
 descricao: string;
 password: string;
 token: string;
+imageURL: string;
 }

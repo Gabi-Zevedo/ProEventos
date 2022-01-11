@@ -39,6 +39,15 @@ export class AccountService {
     this.currentUserSource.next(user);
   }
 
+  postUpload(file: File): Observable<UserUpdate>{
+    const fileToUpload = file[0] as File;
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+
+    return this.http.post<UserUpdate>(`${this.baseUrl}upload-image`, formData)
+    .pipe(take(1));
+  }
+
   public register(model: any): Observable<void> {
     return this.http.post<User>(this.baseUrl + 'register', model).pipe(
       take(1),

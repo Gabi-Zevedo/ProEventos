@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,11 +33,16 @@ namespace ProEventos.API.Helpers
         }
         public void DeleteImage(string nomeImagem, string destino)
         {
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/{destino}", nomeImagem);
-            if (System.IO.File.Exists(imagePath))
+            if (!string.IsNullOrEmpty(nomeImagem))
             {
-                System.IO.File.Delete(imagePath);
+                var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/{destino}", nomeImagem);
+                if (File.Exists(imagePath))
+                {
+                    File.Delete(imagePath);
+                }
             }
+
+
         }
     }
 }
